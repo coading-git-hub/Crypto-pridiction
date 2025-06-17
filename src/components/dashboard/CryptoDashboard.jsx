@@ -4,6 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import { TrendingUp, Search, MoreHorizontal, X, Square, RotateCcw, Eye, EyeOff, User } from 'lucide-react';
 import PredictionModal from './PredictionModal';
 import TradersTabContent from '../TradersTabContent';
+import LayoutHeader from '../LayoutHeader';
+import Sidebar from '../LayoutSidebar';
+
+const dummyNews = {
+  title: 'Bitcoin Set to Surge Past $100K by Mid-2025',
+  text: 'Experts predict that by mid-2025, Bitcoin will soar past $100,000, driven by increased institutional adoption and a surge in decentralized finance (DeFi) usage.'
+};
+const dummySystemInfo = [
+  { label: 'GPUs Mining', value: 'Germany', status: 'active' },
+  { label: 'CPUs Mining', value: 'Germany', status: 'active' },
+  { label: 'Today Mining', value: '$28.6', status: 'active' }
+];
 
 const CryptoDashboard = () => {
   const { currentUser, logout } = useAuth();
@@ -11,6 +23,7 @@ const CryptoDashboard = () => {
   const [showPrediction, setShowPrediction] = useState(false);
   const [currentPrediction, setCurrentPrediction] = useState(null);
   const [activeTab, setActiveTab] = useState('market');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [predictionHistory, setPredictionHistory] = useState([
     {
       id: 1,
@@ -66,10 +79,10 @@ const CryptoDashboard = () => {
   ]);
 
   const [tradingData] = useState([
-    { name: 'BTC', price: '22,256.19', change: '+2%', accuracy: 98, color: 'text-red-400' },
-    { name: 'TRX', price: '22,256.19', change: '+2%', accuracy: 35, color: 'text-green-400' },
-    { name: 'DOGE', price: '22,256.19', change: '+2%', accuracy: 58, color: 'text-blue-400' },
-    { name: 'XRP', price: '22,256.19', change: '+2%', accuracy: 76, color: 'text-orange-400' }
+    { name: 'BTC', price: '22,256.19', change: '+2%', accuracy: 98, color: 'text-green-400' },
+    { name: 'TRX', price: '22,256.19', change: '+2%', accuracy: 35, color: 'text-red-400' },
+    { name: 'DOGE', price: '22,256.19', change: '+2%', accuracy: 58, color: 'text-yellow-400' },
+    { name: 'XRP', price: '22,256.19', change: '+2%', accuracy: 76, color: 'text-green-400' }
   ]);
 
   const generatePrediction = (coinName) => {
@@ -131,244 +144,138 @@ const CryptoDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      {/* Header */}
-      <div className="bg-gray-800 px-6 py-4 flex items-center justify-between border-b border-gray-700">
-        <div className="flex items-center space-x-4">
-          <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-            <span className="text-black font-bold text-sm">L</span>
-          </div>
-          <span className="text-white font-semibold">Logoipsum</span>
-          <div className="flex space-x-6 ml-8">
-            <span className="text-gray-300">Wallet</span>
-            <span className="text-gray-300">Invoice</span>
-          </div>
-        </div>
-        
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <input
-              type="text"
-              placeholder="Search"
-              className="bg-gray-700 border border-gray-600 rounded-md pl-10 pr-4 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            />
-          </div>
-          <div className="flex items-center space-x-2">
-            <img
-              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              alt="Profile"
-              className="w-8 h-8 rounded-full"
-            />
-            <span className="text-sm text-white">Hi {currentUser?.name || 'User'}</span>
-            <button
-              onClick={handleLogout}
-              className="text-gray-400 hover:text-white text-sm ml-2"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex">
+    <div className="min-h-screen bg-gray-900 text-white flex flex-col">
+      <LayoutHeader onSidebarOpen={() => setSidebarOpen(true)} />
+      <div className="flex flex-col md:flex-row flex-1 gap-0 md:gap-6 w-full max-w-6xl mx-auto px-2 sm:px-4 md:px-8">
         {/* Main Content */}
-        <div className="flex-1 p-6" style={{ flex: '1 1 70%' }}>
+        <div className="w-full md:w-[70%] flex flex-col">
           {/* Wallet Demography */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h2 className="text-xl font-semibold text-white">Wallet Demography</h2>
-                <p className="text-gray-400 text-sm">Last Payment Sent 4 days ago</p>
-              </div>
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
-                New Wallet
-              </button>
+          <div className="mb-10 md:mb-12">
+            <div className="flex flex-col items-center space-y-4 mb-10">
+              <h2 className="text-3xl font-extrabold text-white">Wallet Demography</h2>
+              <p className="text-3xl font-extrabold text-yellow-300">Last Payment Sent 4 days ago</p>
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-3xl font-extrabold shadow-lg">New Wallet</button>
             </div>
-
             {/* Crypto Cards */}
-            <div className="grid grid-cols-4 gap-4 mb-8">
-              {cryptoData.map((crypto, index) => (
-                <div key={index} className={`${crypto.bgColor} rounded-lg p-4 relative hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer shadow-lg`}>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="w-8 h-8 bg-opacity-20 rounded-full flex items-center justify-center shadow-lg">
-                      <span className="text-black font-bold text-sm">{crypto.icon}</span>
+            <div className="w-full overflow-x-auto">
+              <div className="grid grid-flow-col auto-cols-[minmax(220px,1fr)] gap-4 mb-6">
+                {cryptoData.map((crypto, index) => (
+                  <div key={index} className={`bg-gradient-to-br ${
+                    crypto.name === 'Bitcoin' ? 'from-yellow-400 to-yellow-500 border-yellow-300' :
+                    crypto.name === 'Ethereum' ? 'from-blue-400 to-blue-500 border-blue-300' :
+                    crypto.name === 'Litecoin' ? 'from-blue-300 to-blue-400 border-blue-200' :
+                    'from-green-400 to-green-500 border-green-300'
+                  } rounded-2xl shadow-2xl p-4 min-w-[220px] flex flex-col justify-between relative hover:scale-105 hover:brightness-110 transition-all duration-300 cursor-pointer border-2`}>
+                    <div className="flex items-center mb-4">
+                      <span className="w-12 h-12 bg-white bg-opacity-30 rounded-full flex items-center justify-center text-2xl font-extrabold shadow-lg text-black">{crypto.icon}</span>
                     </div>
+                    <div className="text-left">
+                      <p className="font-extrabold text-xl text-black drop-shadow">{crypto.name}</p>
+                      <p className="text-xl font-extrabold text-white mt-2 drop-shadow">${crypto.price.toLocaleString()}</p>
+                      <p className="text-base font-semibold text-black opacity-80 mt-1">{crypto.change > 0 ? '+' : ''}{crypto.change}% • 24h</p>
+                    </div>
+                    <button
+                      onClick={() => handlePredictionClick(crypto.name)}
+                      className="absolute top-4 right-4 bg-white bg-opacity-80 text-yellow-700 px-6 py-2 rounded-2xl font-extrabold shadow hover:bg-yellow-200 transition"
+                    >
+                      Prediction
+                    </button>
                   </div>
-                  <div>
-                    <p className="text-white font-semibold text-lg">{crypto.name}</p>
-                    <p className="text-white text-2xl font-bold mt-2">${crypto.price.toLocaleString()}</p>
-                    <p className="text-white text-xs opacity-75 mt-1">
-                      {crypto.change > 0 ? '+' : ''}{crypto.change}% • 24h
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => handlePredictionClick(crypto.name)}
-                    className={`absolute top-3 right-3 ${crypto.bgColor.replace(/-\d+$/, '-200')} text-black px-3 py-1 rounded text-xs font-medium transition-all shadow-lg`}
-                  >
-                    Prediction
-                  </button>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-
-            {/* Trading Section */}
-            <div className="bg-gray-800 rounded-lg p-6">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex space-x-6">
-                  <button 
-                    onClick={() => setActiveTab('market')}
-                    className={`font-medium pb-2 border-b-2 transition-all duration-300 hover:text-white ${
-                      activeTab === 'market' 
-                        ? 'text-white border-blue-500'
-                        : 'text-gray-400 border-transparent hover:border-gray-500'
-                    }`}
-                  >
-                    Market
-                  </button>
-                  <button 
-                    onClick={() => setActiveTab('traders')}
-                    className={`font-medium pb-2 border-b-2 transition-all duration-300 hover:text-white ${
-                      activeTab === 'traders' 
-                        ? 'text-white border-blue-500'
-                        : 'text-gray-400 border-transparent hover:border-gray-500'
-                    }`}
-                  >
-                    Traders
-                  </button>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <select className="bg-gray-700 border border-gray-600 rounded text-white text-sm px-3 py-1">
-                    <option>Last 30 days</option>
-                  </select>
-                  <select className="bg-gray-700 border border-gray-600 rounded text-white text-sm px-3 py-1">
-                    <option>Buy</option>
-                  </select>
-                </div>
+          </div>
+          {/* Market/Traders Section */}
+          <div className="bg-[#181A20] rounded-2xl shadow border border-gray-700 p-0 mb-8 overflow-x-auto">
+            <div className="flex items-center justify-between px-6 pt-6 pb-2">
+              <div className="flex space-x-8">
+                <button
+                  onClick={() => setActiveTab('market')}
+                  className={`text-lg font-extrabold pb-2 border-b-2 transition-all duration-300 ${activeTab === 'market' ? 'text-yellow-400 border-yellow-400' : 'text-gray-400 border-transparent hover:border-gray-500'}`}
+                >
+                  Market
+                </button>
+                <button
+                  onClick={() => setActiveTab('traders')}
+                  className={`text-lg font-extrabold pb-2 border-b-2 transition-all duration-300 ${activeTab === 'traders' ? 'text-yellow-400 border-yellow-400' : 'text-gray-400 border-transparent hover:border-gray-500'}`}
+                >
+                  Traders
+                </button>
               </div>
-
-              <div className="space-y-4">
-                {activeTab === 'market' ? (
-                  tradingData.map((item, index) => (
-                    <div key={index} className="flex items-center justify-between py-3 border-b border-gray-700 last:border-b-0 hover:bg-gray-700 hover:bg-opacity-30 rounded-lg px-2 transition-all duration-200">
-                      <div className="flex items-center space-x-4">
-                        <div className="flex items-center space-x-2">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <span className="text-white font-medium">BUY</span>
-                        </div>
-                        <div className={`flex items-center space-x-1 ${item.color}`}>
-                          <TrendingUp className="w-4 h-4" />
-                          <TrendingUp className="w-4 h-4" />
-                          <TrendingUp className="w-4 h-4" />
-                        </div>
-                        <span className="text-white font-medium">{item.name}</span>
-                        <span className="text-gray-400 text-sm">USD</span>
-                      </div>
-                      
-                      <div className="flex items-center space-x-6">
-                        <div className="text-right">
-                          <p className="text-white font-semibold">${item.price}</p>
-                          <p className="text-green-400 text-sm">{item.change}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-gray-400 text-sm">Accuracy</p>
-                          <p className="text-white font-semibold">{item.accuracy}%</p>
-                        </div>
-                        <div className="w-32">
-                          <div className="flex items-center space-x-2">
-                            <div className="flex-1 bg-gray-700 rounded-full h-2">
-                              <div 
-                                className={`h-2 rounded-full ${item.accuracy > 70 ? 'bg-green-500' : item.accuracy > 40 ? 'bg-yellow-500' : 'bg-red-500'}`}
-                                style={{ width: `${item.accuracy}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                        </div>
-                        <MoreHorizontal className="w-5 h-5 text-gray-400 cursor-pointer hover:text-white transition-colors" />
+            </div>
+            {/* Market/Traders Content */}
+            <div className="divide-y divide-gray-800">
+              {activeTab === 'market' ? (
+                tradingData.map((item, index) => (
+                  <div key={index} className="flex flex-col md:flex-row items-center px-6 py-4 hover:bg-[#23262F] transition rounded-xl md:rounded-none border-b border-gray-800 last:border-b-0">
+                    {/* Coin */}
+                    <div className="w-full md:w-1/4 flex items-center gap-3 mb-2 md:mb-0">
+                      <span className="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center text-lg font-extrabold text-yellow-400 shadow">{item.name.charAt(0)}</span>
+                      <div className="flex flex-col">
+                        <span className="font-bold text-white text-base">{item.name}</span>
+                        <span className="text-xs text-gray-400">{item.price}</span>
                       </div>
                     </div>
-                  ))
-                ) : (
-                  <TradersTabContent />
-                )}
-              </div>
+                    {/* Amount */}
+                    <div className="w-full md:w-1/5 text-center text-white font-bold text-base mb-2 md:mb-0">{item.change}</div>
+                    {/* Coin Price / Cost Price */}
+                    <div className="w-full md:w-1/5 text-center text-white font-bold text-base mb-2 md:mb-0">{item.price}</div>
+                    {/* 24H Change */}
+                    <div className={`w-full md:w-1/5 text-center font-bold text-base mb-2 md:mb-0 ${item.change.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>{item.change}</div>
+                    {/* Trade */}
+                    <div className="w-full md:w-1/10 flex justify-end">
+                      <a href="#" className="text-yellow-400 font-bold hover:underline text-base">Trade</a>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="px-4 py-6"><TradersTabContent /></div>
+              )}
             </div>
           </div>
         </div>
-
-        {/* Right Sidebar */}
-        <div className="w-80 bg-gray-800 p-6 border-l border-gray-700" style={{ flex: '0 0 30%' }}>
+        {/* Sidebar */}
+        <div className="w-full md:w-[30%] flex flex-col gap-4 mt-4 md:mt-0 md:pl-0">
           {/* Prediction News */}
-          <div className="mb-8">
-            <div className="flex items-center space-x-2 mb-4">
-              <Square className="w-4 h-4 text-blue-500 fill-blue-500" />
-              <h3 className="text-lg font-semibold text-white">Prediction News</h3>
-            </div>
-            <div className="bg-gray-900 p-4 rounded-lg">
-              <h4 className="text-md font-semibold text-white mb-2">Bitcoin Set to Surge Past $100K by Mid-2025</h4>
-              <p className="text-gray-400 text-sm">
-                Experts predict that by mid-2025, Bitcoin will soar past $100,000, driven by increased institutional adoption and a surge in decentralized finance (DeFi) usage.
-              </p>
+          <div className="bg-gray-800 rounded-lg p-4 mb-2">
+            <h3 className="text-2xl font-bold text-blue-400 mb-2">Prediction News</h3>
+            <div className="bg-gray-900 rounded-lg p-3">
+              <h4 className="text-2xl font-semibold text-white mb-1">{dummyNews.title}</h4>
+              <p className="text-lg text-gray-300">{dummyNews.text}</p>
             </div>
           </div>
-
           {/* System Info */}
-          <div className="mb-8">
-            <h3 className="text-lg font-semibold text-white mb-4">System Info</h3>
-            <div className="space-y-3">
-              <p className="text-gray-400 text-sm">System collects real-time device details for performance monitoring and troubleshooting</p>
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-white">GPUs Mining</span>
+          <div className="bg-gray-800 rounded-lg p-4 mb-2">
+            <h3 className="text-2xl font-bold text-blue-400 mb-2">System Info</h3>
+            <div className="text-lg text-gray-300 space-y-2">
+              {dummySystemInfo.map((info, idx) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full ${info.status === 'active' ? 'bg-green-400' : 'bg-gray-500'}`}></span>
+                  <span>{info.label}</span>
+                  <span className="ml-auto text-xs text-gray-400">{info.value}</span>
                 </div>
-                <span className="text-gray-400">Germany</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-white">CPUs Mining</span>
-                </div>
-                <span className="text-gray-400">Germany</span>
-              </div>
-              <div className="flex items-center justify-between text-sm">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
-                  <span className="text-white">Today Mining</span>
-                </div>
-                <span className="text-gray-400">$28.6</span>
-              </div>
+              ))}
             </div>
           </div>
-
           {/* Prediction History */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Prediction History</h3>
-            <div className="space-y-3">
-              {predictionHistory.map((prediction) => (
-                <div key={prediction.id} className="bg-gray-900 rounded-lg p-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-white font-medium text-sm">{prediction.coin}</span>
-                    <span className={`px-2 py-1 rounded text-xs ${
-                      prediction.status === 'active' 
-                        ? 'bg-green-500 bg-opacity-20' 
-                        : 'bg-gray-500 bg-opacity-20 hover:bg-green-500'
-                    }`}>
-                      {prediction.status}
-                    </span>
+          <div className="bg-gray-800 rounded-lg p-4">
+            <h3 className="text-2xl font-bold text-blue-400 mb-2">Prediction History</h3>
+            <div className="space-y-2">
+              {predictionHistory.map((item) => (
+                <div key={item.id} className="bg-gray-900 rounded-lg p-3 flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl font-semibold text-white">{item.coin}</span>
+                    <span className={`ml-auto px-4 py-2 rounded-lg text-base font-bold ${item.status === 'active' ? 'bg-green-600 text-white' : 'bg-gray-700 text-gray-300'}`}>{item.status}</span>
                   </div>
-                  <p className="text-gray-400 text-xs mb-2">{prediction.prediction}</p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-blue-400 text-xs">Accuracy: {prediction.accuracy}%</span>
-                    <span className="text-gray-500 text-xs">{prediction.timestamp}</span>
-                  </div>
+                  <span className="text-lg text-gray-300">{item.prediction}</span>
+                  <span className="text-lg text-blue-400 font-semibold">Accuracy: {item.accuracy}%</span>
+                  <span className="text-lg text-gray-500">{item.timestamp}</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
       </div>
-
       {/* Prediction Modal */}
       {showPrediction && currentPrediction && (
         <PredictionModal 
