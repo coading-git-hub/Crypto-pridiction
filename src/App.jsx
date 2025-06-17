@@ -40,47 +40,35 @@ const AppRoutes = () => {
     <Routes>
       <Route
         path="/login"
-        element={currentUser ? <Navigate to="/" /> : <LoginForm />}
+        element={<LoginForm />}
       />
       <Route
         path="/register"
-        element={currentUser ? <Navigate to="/" /> : <RegisterForm />}
+        element={<RegisterForm />}
       />
       <Route
         path="/"
-        element={<LandingPage />}
+        element={currentUser ? <LandingPage /> : <Navigate to="/login" />}
       />
       <Route
         path="/about"
-        element={<AboutPage />}
+        element={currentUser ? <AboutPage /> : <Navigate to="/login" />}
       />
       <Route
         path="/dashboard"
-        element={
-          <PrivateRoute>
-            <CryptoDashboard />
-          </PrivateRoute>
-        }
+        element={currentUser ? <CryptoDashboard /> : <Navigate to="/login" />}
       />
       <Route
         path="/try"
-        element={<TryItPage />}
+        element={currentUser ? <TryItPage /> : <Navigate to="/login" />}
       />
       <Route
         path="/prediction-history"
-        element={
-          <PrivateRoute>
-            <Placeholder title="Prediction History" />
-          </PrivateRoute>
-        }
+        element={currentUser ? <Placeholder title="Prediction History" /> : <Navigate to="/login" />}
       />
       <Route
         path="/trading"
-        element={
-          <PrivateRoute>
-            <Placeholder title="Trading" />
-          </PrivateRoute>
-        }
+        element={currentUser ? <Placeholder title="Trading" /> : <Navigate to="/login" />}
       />
       <Route
         path="*"
